@@ -1,0 +1,44 @@
+-- 1. Criar o banco de dados
+CREATE DATABASE IF NOT EXISTS loja_online;
+USE loja_online;
+
+-- 2. Criar a tabela de Clientes
+CREATE TABLE IF NOT EXISTS Cliente (
+    id INT AUTO_INCREMENT PRIMARY KEY,    -- Chave primária
+    nome VARCHAR(100) NOT NULL,           -- Nome do cliente
+    email VARCHAR(100) NOT NULL UNIQUE,   -- Email único
+    telefone VARCHAR(20),                 -- Telefone do cliente
+    data_cadastro DATETIME DEFAULT NOW()  -- Data de cadastro do cliente
+);
+
+-- 3. Criar a tabela de Produtos
+CREATE TABLE IF NOT EXISTS Produto (
+    id INT AUTO_INCREMENT PRIMARY KEY,    -- Chave primária
+    nome VARCHAR(100) NOT NULL,           -- Nome do produto
+    descricao TEXT,                       -- Descrição do produto
+    preco DECIMAL(10, 2) NOT NULL,        -- Preço do produto
+    estoque INT DEFAULT 0,                -- Quantidade em estoque
+    data_criacao DATETIME DEFAULT NOW()   -- Data de criação do produto
+);
+
+-- 4. Criar a tabela de Pedidos
+CREATE TABLE IF NOT EXISTS Pedido (
+    id INT AUTO_INCREMENT PRIMARY KEY,    -- Chave primária
+    cliente_id INT,                       -- Chave estrangeira para a tabela Cliente
+    data_pedido DATETIME DEFAULT NOW(),   -- Data do pedido
+    total DECIMAL(10, 2),                 -- Total do pedido
+    FOREIGN KEY (cliente_id) REFERENCES Cliente(id) ON DELETE CASCADE -- Relacionamento com Cliente
+);
+
+-- 5. Inserir dados exemplo
+INSERT INTO Cliente (nome, email, telefone) VALUES
+('João Silva', 'joao@email.com', '123456789'),
+('Maria Oliveira', 'maria@email.com', '987654321');
+
+INSERT INTO Produto (nome, descricao, preco, estoque) VALUES
+('Camiseta', 'Camiseta de algodão', 39.99, 100),
+('Calça Jeans', 'Calça jeans masculina', 79.90, 50);
+
+INSERT INTO Pedido (cliente_id, total) VALUES
+(1, 119.99),  -- Pedido de João Silva
+(2, 79.90);   -- Pedido de Maria Oliveira
